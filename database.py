@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from datetime import datetime
 
-MONGO_URI = "mongodb+srv://sociotrace_user:BA2Xt3.Am24mE2G@cluster0.bnj83ko.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_URI = "mongodb+srv://sociotrace_user:sociotrace123@cluster0.bnj83ko.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 client = MongoClient(MONGO_URI)
 

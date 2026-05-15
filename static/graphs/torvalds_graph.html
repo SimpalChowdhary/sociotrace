@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 700px;
+                 background-color: #0f172a;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#38bdf8", "font": {"color": "white"}, "id": "torvalds", "label": "torvalds", "shape": "dot", "size": 35}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Academia.edu", "label": "Academia.edu", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "AllMyLinks", "label": "AllMyLinks", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Archive of Our Own", "label": "Archive of Our Own", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Arduino Forum", "label": "Arduino Forum", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Audiojungle", "label": "Audiojungle", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "BitBucket", "label": "BitBucket", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Bluesky", "label": "Bluesky", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Chess", "label": "Chess", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Codeberg", "label": "Codeberg", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Codecademy", "label": "Codecademy", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Codechef", "label": "Codechef", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Codeforces", "label": "Codeforces", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Cracked Forum", "label": "Cracked Forum", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "DailyMotion", "label": "DailyMotion", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Discord", "label": "Discord", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Disqus", "label": "Disqus", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Docker Hub", "label": "Docker Hub", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Dribbble", "label": "Dribbble", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Duolingo", "label": "Duolingo", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Flickr", "label": "Flickr", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Flipboard", "label": "Flipboard", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Freelancer", "label": "Freelancer", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Freesound", "label": "Freesound", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "GitHub", "label": "GitHub", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Gitea", "label": "Gitea", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Gitee", "label": "Gitee", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Hackaday", "label": "Hackaday", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "HackerRank", "label": "HackerRank", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Hive Blog", "label": "Hive Blog", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "HudsonRock", "label": "HudsonRock", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Hugging Face", "label": "Hugging Face", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "IFTTT", "label": "IFTTT", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Imgur", "label": "Imgur", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "kaskus", "label": "kaskus", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Keybase", "label": "Keybase", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Kick", "label": "Kick", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Launchpad", "label": "Launchpad", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Lichess", "label": "Lichess", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "LiveJournal", "label": "LiveJournal", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Medium", "label": "Medium", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Memrise", "label": "Memrise", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Minecraft", "label": "Minecraft", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "MixCloud", "label": "MixCloud", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Naver", "label": "Naver", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Pastebin", "label": "Pastebin", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Patreon", "label": "Patreon", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Periscope", "label": "Periscope", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "pixelfed.social", "label": "pixelfed.social", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Plurk", "label": "Plurk", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Pokemon Showdown", "label": "Pokemon Showdown", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Redbubble", "label": "Redbubble", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Replit.com", "label": "Replit.com", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "RubyGems", "label": "RubyGems", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Scratch", "label": "Scratch", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Slack", "label": "Slack", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Snapchat", "label": "Snapchat", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "SoundCloud", "label": "SoundCloud", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "SpaceHey", "label": "SpaceHey", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Star Citizen", "label": "Star Citizen", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Steam Community (User)", "label": "Steam Community (User)", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Substack", "label": "Substack", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "TETR.IO", "label": "TETR.IO", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Telegram", "label": "Telegram", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "ThemeForest", "label": "ThemeForest", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "TradingView", "label": "TradingView", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Twitch", "label": "Twitch", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Untappd", "label": "Untappd", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "VirusTotal", "label": "VirusTotal", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Wikipedia", "label": "Wikipedia", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "WordPress", "label": "WordPress", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Wykop", "label": "Wykop", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Xbox Gamertag", "label": "Xbox Gamertag", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "couchsurfing", "label": "couchsurfing", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "datingRU", "label": "datingRU", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "drive2", "label": "drive2", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "fl", "label": "fl", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "geocaching", "label": "geocaching", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "habr", "label": "habr", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "jbzd.com.pl", "label": "jbzd.com.pl", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "jeuxvideo", "label": "jeuxvideo", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "last.fm", "label": "last.fm", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "livelib", "label": "livelib", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "mastodon.cloud", "label": "mastodon.cloud", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "osu!", "label": "osu!", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "pikabu", "label": "pikabu", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Pinterest", "label": "Pinterest", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "threads", "label": "threads", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "tumblr", "label": "tumblr", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "BabyRu", "label": "BabyRu", "shape": "dot", "size": 20}]);
+                  edges = new vis.DataSet([{"from": "torvalds", "to": "Academia.edu"}, {"from": "torvalds", "to": "AllMyLinks"}, {"from": "torvalds", "to": "Archive of Our Own"}, {"from": "torvalds", "to": "Arduino Forum"}, {"from": "torvalds", "to": "Audiojungle"}, {"from": "torvalds", "to": "BitBucket"}, {"from": "torvalds", "to": "Bluesky"}, {"from": "torvalds", "to": "Chess"}, {"from": "torvalds", "to": "Codeberg"}, {"from": "torvalds", "to": "Codecademy"}, {"from": "torvalds", "to": "Codechef"}, {"from": "torvalds", "to": "Codeforces"}, {"from": "torvalds", "to": "Cracked Forum"}, {"from": "torvalds", "to": "DailyMotion"}, {"from": "torvalds", "to": "Discord"}, {"from": "torvalds", "to": "Disqus"}, {"from": "torvalds", "to": "Docker Hub"}, {"from": "torvalds", "to": "Dribbble"}, {"from": "torvalds", "to": "Duolingo"}, {"from": "torvalds", "to": "Flickr"}, {"from": "torvalds", "to": "Flipboard"}, {"from": "torvalds", "to": "Freelancer"}, {"from": "torvalds", "to": "Freesound"}, {"from": "torvalds", "to": "GitHub"}, {"from": "torvalds", "to": "Gitea"}, {"from": "torvalds", "to": "Gitee"}, {"from": "torvalds", "to": "Hackaday"}, {"from": "torvalds", "to": "HackerRank"}, {"from": "torvalds", "to": "Hive Blog"}, {"from": "torvalds", "to": "HudsonRock"}, {"from": "torvalds", "to": "Hugging Face"}, {"from": "torvalds", "to": "IFTTT"}, {"from": "torvalds", "to": "Imgur"}, {"from": "torvalds", "to": "kaskus"}, {"from": "torvalds", "to": "Keybase"}, {"from": "torvalds", "to": "Kick"}, {"from": "torvalds", "to": "Launchpad"}, {"from": "torvalds", "to": "Lichess"}, {"from": "torvalds", "to": "LiveJournal"}, {"from": "torvalds", "to": "Medium"}, {"from": "torvalds", "to": "Memrise"}, {"from": "torvalds", "to": "Minecraft"}, {"from": "torvalds", "to": "MixCloud"}, {"from": "torvalds", "to": "Naver"}, {"from": "torvalds", "to": "Pastebin"}, {"from": "torvalds", "to": "Patreon"}, {"from": "torvalds", "to": "Periscope"}, {"from": "torvalds", "to": "pixelfed.social"}, {"from": "torvalds", "to": "Plurk"}, {"from": "torvalds", "to": "Pokemon Showdown"}, {"from": "torvalds", "to": "Redbubble"}, {"from": "torvalds", "to": "Replit.com"}, {"from": "torvalds", "to": "RubyGems"}, {"from": "torvalds", "to": "Scratch"}, {"from": "torvalds", "to": "Slack"}, {"from": "torvalds", "to": "Snapchat"}, {"from": "torvalds", "to": "SoundCloud"}, {"from": "torvalds", "to": "SpaceHey"}, {"from": "torvalds", "to": "Star Citizen"}, {"from": "torvalds", "to": "Steam Community (User)"}, {"from": "torvalds", "to": "Substack"}, {"from": "torvalds", "to": "TETR.IO"}, {"from": "torvalds", "to": "Telegram"}, {"from": "torvalds", "to": "ThemeForest"}, {"from": "torvalds", "to": "TradingView"}, {"from": "torvalds", "to": "Twitch"}, {"from": "torvalds", "to": "Untappd"}, {"from": "torvalds", "to": "VirusTotal"}, {"from": "torvalds", "to": "Wikipedia"}, {"from": "torvalds", "to": "WordPress"}, {"from": "torvalds", "to": "Wykop"}, {"from": "torvalds", "to": "Xbox Gamertag"}, {"from": "torvalds", "to": "couchsurfing"}, {"from": "torvalds", "to": "datingRU"}, {"from": "torvalds", "to": "drive2"}, {"from": "torvalds", "to": "fl"}, {"from": "torvalds", "to": "geocaching"}, {"from": "torvalds", "to": "habr"}, {"from": "torvalds", "to": "jbzd.com.pl"}, {"from": "torvalds", "to": "jeuxvideo"}, {"from": "torvalds", "to": "last.fm"}, {"from": "torvalds", "to": "livelib"}, {"from": "torvalds", "to": "mastodon.cloud"}, {"from": "torvalds", "to": "osu!"}, {"from": "torvalds", "to": "pikabu"}, {"from": "torvalds", "to": "Pinterest"}, {"from": "torvalds", "to": "threads"}, {"from": "torvalds", "to": "tumblr"}, {"from": "torvalds", "to": "BabyRu"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

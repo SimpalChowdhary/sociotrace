@@ -1,57 +1,45 @@
-import networkx as nx
-import matplotlib.pyplot as plt
+from pyvis.network import Network
 import os
-
 
 def generate_account_graph(username, sherlock_data):
 
-    # Validate Sherlock output
-    if not sherlock_data or sherlock_data.get("status") != "success":
-        return
+    net = Network(
+        height="700px",
+        width="100%",
+        bgcolor="#0f172a",
+        font_color="white",
+        directed=False
+    )
+
+    net.add_node(
+        username,
+        label=username,
+        color="#38bdf8",
+        size=35
+    )
 
     accounts = sherlock_data.get("accounts", [])
 
-    if not accounts:
-        return
+    for acc in accounts:
 
-    # Create graph
-    G = nx.Graph()
+        platform = acc.get("platform")
 
-    # Central node (username)
-    G.add_node(username)
+        net.add_node(
+            platform,
+            label=platform,
+            color="#22c55e",
+            size=20
+        )
 
-    # Add platforms as nodes
-    for account in accounts:
-        platform = account["platform"]
+        net.add_edge(username, platform)
 
-        G.add_node(platform)
-        G.add_edge(username, platform)
+    graph_folder = "static/graphs"
+    os.makedirs(graph_folder, exist_ok=True)
 
-    # Graph layout
-    pos = nx.spring_layout(G, seed=42)
+    path = f"{graph_folder}/{username}_graph.html"
 
-    plt.figure(figsize=(12, 10))
+    net.write_html(path)
 
-    nx.draw(
-        G,
-        pos,
-        with_labels=True,
-        node_size=2500,
-        node_color="skyblue",
-        font_size=9,
-        font_weight="bold"
-    )
+    print("Graph saved:", path)
 
-    # Create output folder
-    os.makedirs("analysis", exist_ok=True)
-
-    # Save graph
-    file_path = f"analysis/{username}_graph.png"
-
-    plt.title(f"Cross‑Platform Identity Graph for {username}")
-
-    plt.savefig(file_path)
-
-    plt.close()
-
-    print(f"\nAccount relationship graph saved to: {file_path}")
+    return path

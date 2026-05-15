@@ -1,46 +1,34 @@
-# github_runner.py
-
 import requests
 
+def run_github_api(username):
 
-def run_github_api(username: str) -> dict:
-    """
-    Fetch public GitHub profile data via API.
-    """
+    url = f"https://api.github.com/users/{username}"
 
     try:
-        url = f"https://api.github.com/users/{username}"
-        response = requests.get(url)
+        response = requests.get(url, verify=False)  # 🔥 FIX: disable SSL verify
+
+        print("GitHub Status:", response.status_code)
 
         if response.status_code != 200:
-            return {
-                "tool": "github_api",
-                "status": "error",
-                "message": "User not found"
-            }
+            print("GitHub API ERROR:", response.text)
+            return None
 
-        user_data = response.json()
-
-        data = {
-            "username": user_data.get("login"),
-            "name": user_data.get("name"),
-            "bio": user_data.get("bio"),
-            "followers": user_data.get("followers"),
-            "following": user_data.get("following"),
-            "public_repos": user_data.get("public_repos"),
-            "location": user_data.get("location"),
-            "company": user_data.get("company")
-        }
+        data = response.json()
 
         return {
-            "tool": "github_api",
-            "status": "success",
-            "data": data
+            "platform": "github",
+            "username": data.get("login"),
+            "name": data.get("name"),
+            "bio": data.get("bio"),
+            "followers": data.get("followers"),
+            "following": data.get("following"),
+            "public_repos": data.get("public_repos"),
+            "location": data.get("location"),
+            "company": data.get("company"),
+            "profile_image": data.get("avatar_url"),
+            "profile_url": data.get("html_url")
         }
 
     except Exception as e:
-        return {
-            "tool": "github_api",
-            "status": "error",
-            "message": str(e)
-        }
+        print("GitHub Exception:", e)
+        return None

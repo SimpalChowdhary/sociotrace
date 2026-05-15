@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Sociotrace Report</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</head>
+
+<body class="dark">
+
+<button id="themeToggle">☀</button>
+
+<div class="container">
+
+<h1 class="title">SOCIOTRACE OSINT REPORT</h1>
+
+<!-- PLATFORM DETECTION -->
+
+<div class="card">
+
+<h2>PLATFORM DETECTION</h2>
+
+<div class="row">
+<span>USERNAME</span>
+<span>{{profile.username}}</span>
+</div>
+
+<div class="row">
+<span>DOMAIN</span>
+<span>{{profile.platform}}</span>
+</div>
+
+<div class="row">
+<span>PLATFORM</span>
+<span>{{profile.platform}}</span>
+</div>
+
+</div>
+
+
+<!-- PROFILE DATA -->
+
+<div class="card">
+
+<h2>PLATFORM SPECIFIC DATA</h2>
+
+<div class="row">
+<span>NAME</span>
+<span>{{profile.name}}</span>
+</div>
+
+<div class="row">
+<span>BIO</span>
+<span>{{profile.bio}}</span>
+</div>
+
+<div class="row">
+<span>FOLLOWERS</span>
+<span>{{profile.followers}}</span>
+</div>
+
+<div class="row">
+<span>PUBLIC REPOS</span>
+<span>{{profile.repos}}</span>
+</div>
+
+<div class="row">
+<span>LOCATION</span>
+<span>{{profile.location}}</span>
+</div>
+
+<div class="row">
+<span>COMPANY</span>
+<span>{{profile.company}}</span>
+</div>
+
+</div>
+
+
+<!-- RISK ANALYSIS -->
+
+<div class="card">
+
+<h2>RISK ANALYSIS</h2>
+
+<div class="riskScore">
+
+<div class="score">{{risk_score}}</div>
+
+<div class="level">{{risk_level}}</div>
+
+</div>
+
+<h3>EXPOSED INFORMATION</h3>
+
+<ul>
+
+{% for item in exposed %}
+
+<li>{{item}}</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+
+<!-- CROSS PLATFORM -->
+
+<div class="card">
+
+<h2>CROSS PLATFORM ACCOUNT DISCOVERY</h2>
+
+<p>Accounts Found: {{accounts|length}}</p>
+
+<ul>
+
+{% for acc in accounts %}
+
+<li>
+
+<strong>{{acc.platform}}</strong>
+
+<br>
+
+<a href="{{acc.url}}" target="_blank">
+
+{{acc.url}}
+
+</a>
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+</div>
+
+</body>
+</html>

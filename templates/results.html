@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sociotrace Analysis Report</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--bg:#0f172a;
+--text:#e2e8f0;
+--box:rgba(56,189,248,0.06);
+--border:rgba(56,189,248,0.25);
+--accent:#38bdf8;
+--value:#7dd3fc;
+}
+
+.light-mode{
+--bg:#f8fafc;
+--text:#0f172a;
+--box:#ffffff;
+--border:#e2e8f0;
+--accent:#0284c7;
+--value:#0284c7;
+}
+
+body{
+font-family:"Inter",sans-serif;
+background:var(--bg);
+color:var(--text);
+margin:0;
+padding:40px;
+transition:0.3s;
+}
+
+.main-title{
+text-align:center;
+font-size:42px;
+font-weight:800;
+margin-bottom:50px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+.section{
+background:var(--box);
+border:1px solid var(--border);
+border-radius:12px;
+padding:30px;
+margin-bottom:35px;
+transition:0.25s;
+}
+
+.section:hover{
+transform:translateY(-3px);
+box-shadow:0 8px 25px rgba(56,189,248,0.25);
+}
+
+.section-title{
+font-weight:700;
+font-size:18px;
+background:var(--accent);
+color:white;
+padding:8px 14px;
+border-radius:6px;
+display:inline-block;
+margin-bottom:20px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+border-bottom:1px solid rgba(148,163,184,0.2);
+}
+
+.label{font-weight:600;}
+.value{color:var(--value);}
+
+.account-list a{
+display:block;
+margin-bottom:8px;
+color:var(--accent);
+text-decoration:none;
+}
+
+.account-list a:hover{text-decoration:underline;}
+
+.theme-toggle{
+position:fixed;
+top:20px;
+right:25px;
+background:none;
+border:none;
+font-size:26px;
+cursor:pointer;
+color:var(--accent);
+}
+
+.graph-frame{
+width:100%;
+height:650px;
+border:none;
+border-radius:10px;
+}
+
+.profile-img{
+width:160px;
+height:160px;
+border-radius:50%;
+border:3px solid var(--accent);
+object-fit:cover;
+margin-top:15px;
+}
+
+.risk-score-display{
+display:flex;
+align-items:center;
+gap:25px;
+margin-bottom:15px;
+}
+
+.risk-number{
+font-size:70px;
+font-weight:800;
+}
+
+.risk-bar{
+width:100%;
+height:10px;
+background:rgba(255,255,255,0.15);
+border-radius:6px;
+overflow:hidden;
+}
+
+#riskProgress{
+height:10px;
+width:0%;
+border-radius:6px;
+transition:width 1s ease;
+}
+
+/* 🔵 BACKGROUND BUBBLES */
+
+.bubbles{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+overflow:hidden;
+z-index:-1;
+}
+
+.bubbles span{
+position:absolute;
+display:block;
+width:20px;
+height:20px;
+background:rgba(56,189,248,0.15);
+border-radius:50%;
+animation:rise 20s linear infinite;
+bottom:-150px;
+}
+
+@keyframes rise{
+0%{
+transform:translateY(0) scale(1);
+opacity:0.6;
+}
+100%{
+transform:translateY(-1200px) scale(1.5);
+opacity:0;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+<div class="bubbles">
+<span style="left:10%; animation-duration:18s;"></span>
+<span style="left:20%; animation-duration:22s;"></span>
+<span style="left:30%; animation-duration:25s;"></span>
+<span style="left:40%; animation-duration:20s;"></span>
+<span style="left:50%; animation-duration:17s;"></span>
+<span style="left:60%; animation-duration:23s;"></span>
+<span style="left:70%; animation-duration:19s;"></span>
+<span style="left:80%; animation-duration:26s;"></span>
+<span style="left:90%; animation-duration:21s;"></span>
+</div>
+
+<div class="container">
+
+<h1 class="main-title">SOCIOTRACE ANALYSIS REPORT</h1>
+
+<!-- PLATFORM DETECTION -->
+<div class="section">
+<div class="section-title">PLATFORM DETECTION</div>
+
+<div class="row">
+<span class="label">Detected Username</span>
+<span class="value">{{ username }}</span>
+</div>
+
+<div class="row">
+<span class="label">Detected Platform</span>
+<span class="value">{{ platform }}</span>
+</div>
+</div>
+
+<!-- PLATFORM DATA -->
+<div class="section">
+<div class="section-title">PLATFORM SPECIFIC DATA</div>
+
+{% if platform_data %}
+
+<div class="row"><span class="label">Username</span><span class="value">{{ platform_data.get("username", "N/A") }}</span></div>
+<div class="row"><span class="label">Name</span><span class="value">{{ platform_data.get("name", "N/A") }}</span></div>
+<div class="row">
+<span class="label">Bio</span>
+<span class="value">
+{{ platform_data.get("bio") or "No bio available" }}
+</span>
+</div>
+<!--<div class="row"><span class="label">Bio</span><span class="value">{{ platform_data.get("bio") if platform_data else "N/A" }}</span></div>-->
+<div class="row"><span class="label">Followers</span><span class="value">{{ platform_data.get("followers", "N/A") }}</span></div>
+<div class="row"><span class="label">Following</span><span class="value">{{ platform_data.get("following", "N/A") }}</span></div>
+<div class="row"><span class="label">Public Repos</span><span class="value">{{ platform_data.get("public_repos", "N/A") }}</span></div>
+<div class="row"><span class="label">Location</span><span class="value">{{ platform_data.get("location", "N/A") }}</span></div>
+
+{% else %}
+<p>Profile data unavailable.</p>
+{% endif %}
+
+</div>
+
+<!-- ACCOUNT DISCOVERY -->
+<div class="section">
+<div class="section-title">ACCOUNT DISCOVERY</div>
+
+<p><b>Accounts Found:</b> {{ sherlock.get("total_found",0) if sherlock else 0 }}</p>
+
+<div class="account-list">
+{% if sherlock and sherlock.get("accounts") and sherlock.get("accounts")|length > 0 %}
+{% for acc in sherlock.get("accounts") %}
+<a href="{{ acc.url }}" target="_blank">
+{{ acc.platform }} → {{ acc.url }}
+</a>
+{% endfor %}
+{% else %}
+<p>No accounts discovered.</p>
+{% endif %}
+</div>
+</div>
+
+<!-- ACCOUNT GRAPH -->
+<div class="section">
+<div class="section-title">ACCOUNT GRAPH</div>
+
+{% if graph is not none %}
+<iframe src="/{{ graph }}" class="graph-frame"></iframe>
+{% else %}
+<p>Graph visualization unavailable.</p>
+{% endif %}
+
+</div>
+
+<!-- PROFILE IMAGE -->
+<div class="section">
+<div class="section-title">PROFILE IMAGE ANALYSIS</div>
+
+{% if platform_data and platform_data.get("profile_image") %}
+<div style="text-align:center">
+<img src="{{ platform_data.get('profile_image') }}" class="profile-img">
+<p style="margin-top:10px;color:var(--value);">
+{{ platform|capitalize }} Profile Photo
+</p>
+</div>
+{% else %}
+<p>No publicly accessible profile photo detected.</p>
+{% endif %}
+
+</div>
+
+<!-- RISK ANALYSIS -->
+<div class="section">
+<div class="section-title">RISK ANALYSIS</div>
+
+<div class="risk-score-display">
+<span class="risk-number">{{ risk.score if risk else 0 }}</span>
+<div>
+<div>RISK LEVEL</div>
+<div id="riskLevel">{{ risk.level if risk else "LOW" }}</div>
+</div>
+</div>
+
+
+<div class="risk-bar">
+<div id="riskProgress"></div>
+</div>
+
+<div class="account-type-line" style="margin-top:15px;">
+    <span class="label">Account Type</span>
+    <span class="value">{{ account_type or "General User" }}</span>
+</div>
+
+<p><b>Exposed Information:</b></p>
+
+<ul>
+{% if risk and risk.exposed %}
+{% for item in risk.exposed %}
+<li>{{ item }}</li>
+{% endfor %}
+{% else %}
+<li>No major exposure detected</li>
+{% endif %}
+</ul>
+
+</div>
+
+<!-- SUMMARY -->
+<div class="section">
+<div class="section-title">SUMMARY</div>
+<p>{{ summary }}</p>
+</div>
+
+<!-- RECOMMENDATIONS -->
+<div class="section">
+<div class="section-title">PERSONALIZED RECOMMENDATIONS</div>
+
+<ul>
+{% if recommendations %}
+{% for rec in recommendations %}
+<li>{{ rec }}</li>
+{% endfor %}
+{% else %}
+<li>No recommendations available.</li>
+{% endif %}
+</ul>
+
+</div>
+
+<!-- ✅ FIXED ATTACKER SECTION -->
+<div class="section">
+<div class="section-title">ATTACKER'S PERSPECTIVE</div>
+
+<ul>
+{% if attacker_view %}
+{% for item in attacker_view %}
+<li>{{ item }}</li>
+{% endfor %}
+{% else %}
+<li>No immediate attack vectors detected</li>
+{% endif %}
+</ul>
+
+</div>
+
+</div>
+
+<script>
+function toggleTheme(){
+let body=document.body
+let btn=document.getElementById("themeToggle")
+body.classList.toggle("light-mode")
+
+if(body.classList.contains("light-mode")){
+btn.innerHTML="🌞"
+localStorage.setItem("theme","light")
+}
+else{
+btn.innerHTML="🌙"
+localStorage.setItem("theme","dark")
+}
+}
+
+window.onload=function(){
+let savedTheme=localStorage.getItem("theme")
+let btn=document.getElementById("themeToggle")
+
+if(savedTheme==="light"){
+document.body.classList.add("light-mode")
+btn.innerHTML="🌞"
+}
+else{
+btn.innerHTML="🌙"
+}
+}
+
+let score=parseFloat("{{ risk.score if risk else 0 }}")
+let bar=document.getElementById("riskProgress")
+let percentage=score*10
+if(percentage>100){percentage=100}
+bar.style.width=percentage+"%"
+
+if(score<=3){
+bar.style.background="#22c55e"
+}
+else if(score<=7){
+bar.style.background="#facc15"
+}
+else{
+bar.style.background="#ef4444"
+}
+</script>
+
+</body>
+</html>

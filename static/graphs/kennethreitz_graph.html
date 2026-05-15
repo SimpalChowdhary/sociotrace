@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 700px;
+                 background-color: #0f172a;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#38bdf8", "font": {"color": "white"}, "id": "kennethreitz", "label": "kennethreitz", "shape": "dot", "size": 35}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Academia.edu", "label": "Academia.edu", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "AllMyLinks", "label": "AllMyLinks", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Apple Developer", "label": "Apple Developer", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Apple Discussions", "label": "Apple Discussions", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Audiojungle", "label": "Audiojungle", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "BitBucket", "label": "BitBucket", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Bluesky", "label": "Bluesky", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Chess", "label": "Chess", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Coderwall", "label": "Coderwall", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "CodeSandbox", "label": "CodeSandbox", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "DEV Community", "label": "DEV Community", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Discord", "label": "Discord", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Disqus", "label": "Disqus", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Docker Hub", "label": "Docker Hub", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Dribbble", "label": "Dribbble", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Duolingo", "label": "Duolingo", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Flickr", "label": "Flickr", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Flightradar24", "label": "Flightradar24", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Flipboard", "label": "Flipboard", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Freelancer", "label": "Freelancer", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Genius (Users)", "label": "Genius (Users)", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "GitHub", "label": "GitHub", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "GitLab", "label": "GitLab", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Gravatar", "label": "Gravatar", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Gumroad", "label": "Gumroad", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "HackerNews", "label": "HackerNews", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "HackMD", "label": "HackMD", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Hugging Face", "label": "Hugging Face", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "IFTTT", "label": "IFTTT", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Imgur", "label": "Imgur", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Instapaper", "label": "Instapaper", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Itch.io", "label": "Itch.io", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Keybase", "label": "Keybase", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Launchpad", "label": "Launchpad", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Lobsters", "label": "Lobsters", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Odysee", "label": "Odysee", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Patreon", "label": "Patreon", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Periscope", "label": "Periscope", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "RubyGems", "label": "RubyGems", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Scratch", "label": "Scratch", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Slack", "label": "Slack", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Snapchat", "label": "Snapchat", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "SpeakerDeck", "label": "SpeakerDeck", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Steam Community (User)", "label": "Steam Community (User)", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "ThemeForest", "label": "ThemeForest", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Trello", "label": "Trello", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Untappd", "label": "Untappd", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Venmo", "label": "Venmo", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "WordPress", "label": "WordPress", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "WordPressOrg", "label": "WordPressOrg", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Xbox Gamertag", "label": "Xbox Gamertag", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "YouTube", "label": "YouTube", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "couchsurfing", "label": "couchsurfing", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "dailykos", "label": "dailykos", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "last.fm", "label": "last.fm", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "mastodon.cloud", "label": "mastodon.cloud", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "Pinterest", "label": "Pinterest", "shape": "dot", "size": 20}, {"color": "#22c55e", "font": {"color": "white"}, "id": "tumblr", "label": "tumblr", "shape": "dot", "size": 20}]);
+                  edges = new vis.DataSet([{"from": "kennethreitz", "to": "Academia.edu"}, {"from": "kennethreitz", "to": "AllMyLinks"}, {"from": "kennethreitz", "to": "Apple Developer"}, {"from": "kennethreitz", "to": "Apple Discussions"}, {"from": "kennethreitz", "to": "Audiojungle"}, {"from": "kennethreitz", "to": "BitBucket"}, {"from": "kennethreitz", "to": "Bluesky"}, {"from": "kennethreitz", "to": "Chess"}, {"from": "kennethreitz", "to": "Coderwall"}, {"from": "kennethreitz", "to": "CodeSandbox"}, {"from": "kennethreitz", "to": "DEV Community"}, {"from": "kennethreitz", "to": "Discord"}, {"from": "kennethreitz", "to": "Disqus"}, {"from": "kennethreitz", "to": "Docker Hub"}, {"from": "kennethreitz", "to": "Dribbble"}, {"from": "kennethreitz", "to": "Duolingo"}, {"from": "kennethreitz", "to": "Flickr"}, {"from": "kennethreitz", "to": "Flightradar24"}, {"from": "kennethreitz", "to": "Flipboard"}, {"from": "kennethreitz", "to": "Freelancer"}, {"from": "kennethreitz", "to": "Genius (Users)"}, {"from": "kennethreitz", "to": "GitHub"}, {"from": "kennethreitz", "to": "GitLab"}, {"from": "kennethreitz", "to": "Gravatar"}, {"from": "kennethreitz", "to": "Gumroad"}, {"from": "kennethreitz", "to": "HackerNews"}, {"from": "kennethreitz", "to": "HackMD"}, {"from": "kennethreitz", "to": "Hugging Face"}, {"from": "kennethreitz", "to": "IFTTT"}, {"from": "kennethreitz", "to": "Imgur"}, {"from": "kennethreitz", "to": "Instapaper"}, {"from": "kennethreitz", "to": "Itch.io"}, {"from": "kennethreitz", "to": "Keybase"}, {"from": "kennethreitz", "to": "Launchpad"}, {"from": "kennethreitz", "to": "Lobsters"}, {"from": "kennethreitz", "to": "Odysee"}, {"from": "kennethreitz", "to": "Patreon"}, {"from": "kennethreitz", "to": "Periscope"}, {"from": "kennethreitz", "to": "RubyGems"}, {"from": "kennethreitz", "to": "Scratch"}, {"from": "kennethreitz", "to": "Slack"}, {"from": "kennethreitz", "to": "Snapchat"}, {"from": "kennethreitz", "to": "SpeakerDeck"}, {"from": "kennethreitz", "to": "Steam Community (User)"}, {"from": "kennethreitz", "to": "ThemeForest"}, {"from": "kennethreitz", "to": "Trello"}, {"from": "kennethreitz", "to": "Untappd"}, {"from": "kennethreitz", "to": "Venmo"}, {"from": "kennethreitz", "to": "WordPress"}, {"from": "kennethreitz", "to": "WordPressOrg"}, {"from": "kennethreitz", "to": "Xbox Gamertag"}, {"from": "kennethreitz", "to": "YouTube"}, {"from": "kennethreitz", "to": "couchsurfing"}, {"from": "kennethreitz", "to": "dailykos"}, {"from": "kennethreitz", "to": "last.fm"}, {"from": "kennethreitz", "to": "mastodon.cloud"}, {"from": "kennethreitz", "to": "Pinterest"}, {"from": "kennethreitz", "to": "tumblr"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
