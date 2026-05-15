@@ -20,3 +20,4 @@ transformers
 torch
 sherlock-project
 pymongo==4.6.1
+gunicorn
